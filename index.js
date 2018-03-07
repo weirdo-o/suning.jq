@@ -77,9 +77,7 @@ $(function () {
             let last = big.children().last()
             let first = big.children().first()
             first.after(last)
-            big.animate({left: -w+ 'px'}, function () {
-                big.css({left: 0})
-            })
+            big.animate({left: -w+ 'px'}).css({left: 0})
 
         }
         right1.click(function () {
@@ -108,17 +106,117 @@ $(function () {
 
     })
 
+    //大聚惠
+    // function dajuhui(arr) {
+    //     let now=0,next=0;
+    //     let box=$(arr);
+    //     let lis=$('.dajuhui-lisbox',box);
+    //     let flag=true;
+    //     $('.right').click(function () {
+    //         next=now+1;
+    //         if(next>=lis.length){
+    //             next=0;
+    //         }
+    //         lis.eq(next).css('left','1000px').animate({left:0}).end().eq(now).animate({left:-1000});
+    //         now=next;
+    //     });
+    //     $('.left').click(function () {
+    //         next=now-1;
+    //         if(next<0){
+    //             next=lis.length-1;
+    //         }
+    //         lis.eq(next).css('left','-1000px').animate({left:0}).end().eq(now).animate({left:1000});
+    //         now=next;
+    //     });
+    // }
+    // dajuhui('.big','.djh-bottom');
+
+
 // 侧导航 // 头部隐藏
-//     let floor = $('.floor .diwuceng')
-//     let celan = $('.aside2')
-//     let aside = $('.aside2-list li')
-//     let h = document.documentElement.clientHeight
-//     let anniu = $('.as-di')
-//     let hidden = $('.hidden')
-//     let djh = $('.dajuhui')
-//     $(window).scroll(function () {
-//         let tops=
-//
-//     })
+    let floor = document.querySelectorAll('.floor .diwuceng')
+    let celan = document.querySelector('.aside2')
+    let aside = document.querySelectorAll('.aside2-list li')
+    let h = document.documentElement.clientHeight
+    let anniu = document.querySelector('.as-di')
+    let hidden = document.querySelector('.hidden')
+    let djh = document.querySelector('.dajuhui')
+    // let flag=true
+    let out = true
+    let back = false
+    let aaa = true
+    let bbb = false
+    window.onscroll = function () {
+        if (!flag) {
+            return
+        }
+        let tops = document.body.scrollTop ? document.body.scrollTop : document.documentElement.scrollTop
+        if (tops >= djh.offsetTop) {
+            if (out) {
+                out = false
+                hidden.style.display = 'block'
+                back = true
+            }
+        } else {
+            if (back) {
+                back = false
+                hidden.style.display = 'none'
+                out = true
+            }
+        }
+        if (tops >= floor[0].offsetTop - 300) {
+            if (aaa) {
+                aaa = false
+                animate(celan, {opacity: 1}, 100, function () {
+                    bbb = true
+                })
+            }
+        } else {
+            if (bbb) {
+                bbb = false
+                animate(celan, {opacity: 0}, 100, function () {
+                    aaa = true
+                })
+            }
+        }
+
+        floor.forEach(function (val, index) {
+            if (tops >= val.offsetTop + 400 - h) {
+                aside.forEach(function (va) {
+                    va.classList.remove('active')
+                })
+                aside[index].classList.add('active')
+            }
+        })
+    }
+    anniu.onclick = function () {
+        animate(document.body, {scrollTop: 0})
+        animate(document.documentElement, {scrollTop: 0}, 200, function () {
+        })
+    }
+    aside.forEach(function (al, index) {
+        al.onclick = function () {
+            flag = false
+            aside.forEach(function (va) {
+                va.classList.remove('active')
+            })
+            al.classList.add('active')
+            let to = floor[index].offsetTop
+            animate(document.body, {scrollTop: to})
+            animate(document.documentElement, {scrollTop: to}, function () {
+                flag = true
+            })
+        }
+    })
+
+    let fl = document.querySelector('.fenleibox')
+    let flcl = document.querySelector('.fenleibox .celan')
+    fl.onmouseover = function () {
+        flcl.style.display = 'block'
+    }
+    fl.onmouseout = function () {
+        flcl.style.display = 'none'
+    }
+
+
 
 })
