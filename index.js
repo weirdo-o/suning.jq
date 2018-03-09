@@ -74,11 +74,12 @@ $(function () {
         let left1 = box.children('.left')
         let w = box.width()
         function move() {
-            let last = big.children().last()
-            let first = big.children().first()
-            first.after(last)
-            big.animate({left: -w+ 'px'}).css({left: 0})
-
+            big.animate({left: -w+ 'px'},function () {
+                big.css({left: 0})
+                let last = big.children().last()
+                let first = big.children().first()
+                last.after(first)
+            })
         }
         right1.click(function () {
             move()
@@ -216,6 +217,58 @@ $(function () {
     fl.onmouseout = function () {
         flcl.style.display = 'none'
     }
+
+// 排行双下标轮播
+
+    function lunbo(a) {
+        let box=$(a);
+        let lis=$('.paihang-xia .phb-list',box);
+        let circles=$('.ph-yuandian li',box);
+        let width=box.width();
+        let now=0,next=0;
+
+        $('.right',box).click(function () {
+            next=now+1;
+            if(next>=lis.length){
+                return;
+            }
+            lis.eq(now).animate({left:-width},'fast');
+            lis.eq(next).animate({left:0},'fast');
+            circles.eq(now).removeClass('active').end().eq(next).addClass('active');
+            now=next;
+        });
+        $('.left',box).click(function () {
+            next=now-1;
+            if(next<0){
+                return;
+            }
+            lis.eq(now).animate({left:width},'fast');
+            lis.eq(next).animate({left:0},'fast');
+            circles.eq(now).removeClass('active').end().eq(next).addClass('active');
+            now=next;
+        });
+        circles.each(function (index) {
+            $(this).click(function () {
+                if(index>now){
+                    next=index;
+                    lis.eq(next).css({'left':'100%'});
+                    lis.eq(now).animate({left:-width},'fast');
+                    lis.eq(next).animate({left:0},'fast');
+                    circles.eq(now).removeClass('active').end().eq(next).addClass('active');
+                    now=next;
+                }
+                else if(index<now){
+                    next=index;
+                    lis.eq(next).css({'left':'-100%'});
+                    lis.eq(now).animate({left:width},'fast');
+                    lis.eq(next).animate({left:0},'fast');
+                    circles.eq(now).removeClass('active').end().eq(next).addClass('active');
+                    now=next;
+                }
+            })
+        })
+    }
+    lunbo('.paihang')
 
 
 
